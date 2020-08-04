@@ -39,12 +39,10 @@ dependencies {
     implementation "androidx.core:core-ktx:$rootProject.ext.coreVersion"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.ext.constraintlayoutVersion"
     implementation "androidx.recyclerview:recyclerview:$rootProject.ext.recyclerviewVersion"
-    implementation 'androidx.paging:paging-runtime-ktx:3.0.0-alpha02'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-alpha05'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0-alpha05'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     //add coroutines to the app
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.6'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.6'
