@@ -1,7 +1,23 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+
+publish {
+    def groupProjectID = 'cthevoid.whichbinds.dslist'
+    def artifactProjectID = 'dslist'
+    def publishVersionID = '0.1.0'
+
+    userOrg = 'pedros7'
+    repoName = 'DSList'
+    groupId = groupProjectID
+    artifactId = artifactProjectID
+    publishVersion = publishVersionID
+    desc = 'Android library for fast and simple implementation of RecyclerView list.'
+    website = 'https://github.com/pedrosr7/DSList'
+}
+
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
