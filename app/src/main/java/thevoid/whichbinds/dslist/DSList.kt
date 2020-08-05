@@ -70,4 +70,4 @@ class DSList<R,T> {
 }
 
 @ExperimentalCoroutinesApi
-fun <R,T> listPaged(init: DSList<R,T>.() -> Unit) = DSList<R,T>().apply(init)
+fun <R,T> listDSL(init: DSList<R,T>.() -> Unit) = DSList<R,T>().apply(init)
