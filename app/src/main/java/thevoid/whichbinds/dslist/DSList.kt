@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.paging.ExperimentalPagingApi
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,9 +16,8 @@ enum class ListState {
     APPEND
 }
 
-typealias StatusK = (ListState) -> Unit
+typealias Status = (ListState) -> Unit
 
-@ExperimentalPagingApi
 @ExperimentalCoroutinesApi
 class DSList<R,T> {
 
@@ -55,7 +53,7 @@ class DSList<R,T> {
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.Main + job)
 
-    fun load(fn: StatusK) = scope.launch {
+    fun load(fn: Status) = scope.launch {
         listState.collect { fn(it) }
     }
 
@@ -71,6 +69,5 @@ class DSList<R,T> {
 
 }
 
-@ExperimentalPagingApi
 @ExperimentalCoroutinesApi
 fun <R,T> listPaged(init: DSList<R,T>.() -> Unit) = DSList<R,T>().apply(init)
