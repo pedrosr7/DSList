@@ -5,7 +5,7 @@
  DSList is a paginated lists builder library for Android:
  * Type-safe builder: DSList is base on domain-specific language (DSL), suitable for building complex hierarchical data structures in a semi-declarative way.
  * Reactive: DSList use StateFlow to handle the state of the list. This helps you load and display small chunks of data at a time.
-
+ 
  ## Using in your projects
 
  The libraries are published to [DSList](https://bintray.com/pedrosr7/DSList/thevoid.whichbinds.dslist) bintray repository,
@@ -30,7 +30,7 @@
 
  ```groovy
  dependencies {
-     implementation 'thevoid.whichbinds.dslist:dslist:0.1.1'
+    implementation 'thevoid.whichbinds.dslist:dslist:0.1.1'
  }
  ```
 
@@ -41,10 +41,6 @@
      jcenter()
  }
  ```
-
- #### R8 and ProGuard
-
- DSList is fully compatible with R8 out of the box and doesn't require adding any extra rules.
  
  ## Documentation
  
@@ -62,20 +58,20 @@
  We need to provide the type arguments `Key` and `Model`.
  
  ```kotlin
-    listPaged<String, RedditPost> {}
+    listDSL<String, RedditPost> {}
  ```
 
  Also we need the reference to the RecyclerView visual component.
  
  ```kotlin
-    listPaged<String, RedditPost> {
+    listDSL<String, RedditPost> {
        recyclerView = this@MainActivity.recyclerView
     }
  ```
 
  And finally we can use the different functions to build our list
  
- Note: No olvides añadir el layaout manager al RecyclerView
+ Important: Don't forget to add the layout manager.
  
  ```kotlin
     recyclerView.layoutManager = LinearLayoutManager(this) // or GridLayoutManager(this,2)
@@ -86,13 +82,13 @@
  The row function allows you to add the content of the list and associate it with the visual components that have been defined.
  You have four properties `id`, `content`, `viewType` and `viewBind`.
  
- * id: Row identifier (optional)
- * content: Row content (optional)
- * viewType: Id of the view already designed for the items (required)
- * viewBind: Function that associates content with visual components (required)
+ - **id**: Row identifier (optional)
+ - **content**: Row content (optional)
+ - **viewType**: Id of the view already designed for the items (required)
+ - **viewBind**: Function that associates content with visual components (required)
  
  ```kotlin
-   listPaged<String, RedditPost> {
+   listDSL<String, RedditPost> {
      recyclerView = this@MainActivity.recyclerView
    
      for (value in listOfRedditPost) {
@@ -124,7 +120,7 @@
    }
   ```
  ```kotlin
-   listPaged<String, RedditPost> {
+   listDSL<String, RedditPost> {
      recyclerView = this@MainActivity.recyclerView
      
      observe(redditPostLiveData) { posts ->
@@ -148,15 +144,16 @@
      }
    }
    ```
- ### load{}
+
+### load{}
   
-  The load is a reactive function that is call every time we can not scroll further.
-  * ListState.REFRESH: Called when data is update.
-  * ListState.PREPEND: Called when reaches the top.
-  * ListState.APPEND: Called when reaches the bottom.
+The load is a reactive function that is call every time we can not scroll further.
+- **REFRESH**: Called when data is update.
+- **PREPEND**: Called when reaches the top.
+- **APPEND**: Called when reaches the bottom.
   
-  ```kotlin
-    listPaged<String, RedditPost> {
+```kotlin
+   listDSL<String, RedditPost> {
       recyclerView = this@MainActivity.recyclerView
       
       load {
@@ -185,24 +182,21 @@
           }           
         }
       }
-    }
+   }
   ```
 
- ## Building
+ ## R8 and ProGuard
 
- This library is built with Gradle. To build it, use `./gradlew build`.
- You can import this project into IDEA, but you have to delegate build actions
- to Gradle (in Preferences -> Build, Execution, Deployment -> Build Tools -> Gradle -> Runner)
+ DSList is fully compatible with R8 out of the box and doesn't require adding any extra rules.
+ 
+ ## Requirements
 
- ### Requirements
-
- * JDK >= 11 referred to by the `JAVA_HOME` environment variable.
- * JDK 1.6 referred to by the `JDK_16` environment variable. It is okay to have `JDK_16` pointing to `JAVA_HOME` for external contributions.
- * JDK 1.8 referred to by the `JDK_18` environment variable. Only used by nightly stress-tests. It is okay to have `JDK_18` pointing to `JAVA_HOME` for external contributions.
+ * Compile SDK: 29+
+ * Min SDK: 23+
 
 ## License
 
-    Copyright 2020 DSList
+    Copyright (c) 2020, DSList Contributors.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
