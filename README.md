@@ -2,7 +2,7 @@
 
  [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](https://www.apache.org/licenses/LICENSE-2.0)
 
- DSList is a paginated lists builder library for Android:
+ DSList is a paginated list builder library for Android:
  * Type-safe builder: DSList is base on domain-specific language (DSL), suitable for building complex hierarchical data structures in a semi-declarative way.
  * Reactive: DSList use StateFlow to handle the state of the list. This helps you load and display small chunks of data at a time.
  
@@ -192,12 +192,12 @@
  }
  ```
 
-### load{}
+ ### load{}
   
-The load is a reactive function that is call every time we can not scroll further.
-- **REFRESH**: Called when data is update.
-- **PREPEND**: Called when reaches the top of the list.
-- **APPEND**: Called when reaches the bottom of the list.
+  The load is a reactive function that is call every time we can not scroll further.
+  - **REFRESH**: Called when data is update.
+  - **PREPEND**: Called when reaches the top of the list.
+  - **APPEND**: Called when reaches the bottom of the list.
   
  ```kotlin
  listDSL<String, RedditPost> {
@@ -205,11 +205,11 @@ The load is a reactive function that is call every time we can not scroll furthe
       
     load {
         when(it) {
-            ListState.REFRESH -> print("")
             ListState.PREPEND -> mainViewModel.getPosts(after = null, before = before)
             ListState.APPEND -> mainViewModel.getPosts(after = after, before = null)
         }
     }
+
     observe(redditPostLiveData) { posts ->
         posts?.let {
             for (value in listOfRedditPost) {
@@ -241,7 +241,7 @@ The load is a reactive function that is call every time we can not scroll furthe
  * Compile SDK: 29+
  * Min SDK: 23+
 
-## License
+ ## License
 
     Copyright (c) 2020, DSList Contributors.
 

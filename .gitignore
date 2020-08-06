@@ -91,20 +91,3 @@ crashlytics-build.properties\
 
 ### Mac
 .DS_Store
-
-# Google Services (e.g. APIs or Firebase)
-google-services.json
-
-# AWS Configuration
-awsconfiguration.json
-
-# Env vars
-env-vars.env
-
-# Fastlane
-#Gemfile.lock
-fastlane/report.xml
-
-# MP4 and VTT files
-*.mp4
-*.mp4.vtt
