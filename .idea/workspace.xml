@@ -9,6 +9,7 @@
     <list default="true" id="d9afae4a-764d-44b3-8ba2-59a476586667" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/thevoid/whichbinds/dslist/DSList.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/thevoid/whichbinds/dslist/DSList.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/local.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -249,13 +250,13 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="372" y="207" width="695" height="486" key="find.popup/0.0.1440.900@0.0.1440.900" timestamp="1596619954676" />
-    <state width="435" height="51" key="javadoc.popup.new" timestamp="1596620080252">
+    <state width="435" height="51" key="javadoc.popup.new" timestamp="1596703706473">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="435" height="51" key="javadoc.popup.new/0.0.1440.900@0.0.1440.900" timestamp="1596620080252" />
-    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1596620152500">
+    <state width="435" height="51" key="javadoc.popup.new/0.0.1440.900@0.0.1440.900" timestamp="1596703706473" />
+    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1596704694840">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1596620152500" />
+    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1596704694840" />
   </component>
 </project>

@@ -41,22 +41,69 @@
      jcenter()
  }
  ```
+
+ ## Quick Start
+ 
+  ```kotlin
+  listDSL<String, RedditPost> {
+     recyclerView = this@MainActivity.recyclerView
+      
+     load {
+         when(it) {
+             ListState.REFRESH -> print("")
+             ListState.PREPEND -> mainViewModel.getPosts(after = null, before = before)
+             ListState.APPEND -> mainViewModel.getPosts(after = after, before = null)
+         }
+     }
+
+     observe(redditPostLiveData) { posts ->
+         posts?.let {
+             for (value in listOfRedditPost) {
+                 row {
+                     id = key
+                     content = value
+                     viewType = R.layout.item_reddit_post
+                     viewBind { content, itemView ->
+                         val title: TextView? =
+                             itemView.findViewById(R.id.textView_title)
+                         val author: TextView? =
+                             itemView.findViewById(R.id.textView_author)
+                         title?.text = content.title
+                         author?.text = content.author
+                     }
+                 }
+             }           
+         }
+     }
+  }
+ ```
  
  ## Documentation
  
  To build a simple or paged list you can use different functions or properties.
- First we need to create data model for the list.
+ 
+ ### properties
+ 
+  - **recyclerView**: Instance of RecyclerView class.
+  - **rows**: List of Row type.
+  - **after**: Last id of the row list.
+  - **before**: First id of the row list.
 
+ ### base
+ 
+ First we need to provide the type arguments <`Key`,`Model`>.
+ 
+ - **Key**: Id that is associated to each row. It can be of any type (String, Int, etc)
+ - **Model**: Type of data that we want to show in the list, for example an String or data class
+ 
  ```kotlin
  data class RedditPost (
     val key: String,
     val title: String,
     val author: String,
  )
-  ```
+ ```
 
- We need to provide the type arguments `Key` and `Model`.
- 
  ```kotlin
  listDSL<String, RedditPost> {}
  ```
@@ -149,8 +196,8 @@
   
 The load is a reactive function that is call every time we can not scroll further.
 - **REFRESH**: Called when data is update.
-- **PREPEND**: Called when reaches the top.
-- **APPEND**: Called when reaches the bottom.
+- **PREPEND**: Called when reaches the top of the list.
+- **APPEND**: Called when reaches the bottom of the list.
   
  ```kotlin
  listDSL<String, RedditPost> {

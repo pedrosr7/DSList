@@ -1,6 +1,5 @@
 package thevoid.whichbinds.dslist
 
-import android.annotation.SuppressLint
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -40,9 +39,11 @@ class DSList<R,T> {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
                     if(recyclerView.reachesTopScrolling(newState)) {
+                        if(_listState.value != ListState.REFRESH) _listState.value = ListState.REFRESH
                         _listState.value = ListState.PREPEND
                     }
                     if(recyclerView.reachesBottomScrolling(newState)) {
+                        if(_listState.value != ListState.REFRESH) _listState.value = ListState.REFRESH
                         _listState.value = ListState.APPEND
                     }
                 }
@@ -60,7 +61,6 @@ class DSList<R,T> {
     fun <T : Any, L : LiveData<T>> LifecycleOwner.observe(liveData: L, body: (T?) -> Unit) =
         liveData.observe(this, Observer(body))
 
-    @SuppressLint("CheckResult")
     fun row(rowBuilderk: RowBuilder<R,T>.() -> Unit) {
         rows.add(RowBuilder<R,T>().apply(rowBuilderk).build())
         adapter.submitRows(RowBuilder<R,T>().apply(rowBuilderk).build())
