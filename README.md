@@ -48,25 +48,25 @@
  First we need to create data model for the list.
 
  ```kotlin
-    data class RedditPost (
-         val key: String,
-         val title: String,
-         val author: String,
-     )
+ data class RedditPost (
+    val key: String,
+    val title: String,
+    val author: String,
+ )
   ```
 
  We need to provide the type arguments `Key` and `Model`.
  
  ```kotlin
-    listDSL<String, RedditPost> {}
+ listDSL<String, RedditPost> {}
  ```
 
  Also we need the reference to the RecyclerView visual component.
  
  ```kotlin
-    listDSL<String, RedditPost> {
-       recyclerView = this@MainActivity.recyclerView
-    }
+ listDSL<String, RedditPost> {
+    recyclerView = this@MainActivity.recyclerView
+ }
  ```
 
  And finally we can use the different functions to build our list
@@ -74,7 +74,7 @@
  Important: Don't forget to add the layout manager.
  
  ```kotlin
-    recyclerView.layoutManager = LinearLayoutManager(this) // or GridLayoutManager(this,2)
+ recyclerView.layoutManager = LinearLayoutManager(this) // or GridLayoutManager(this,2)
  ```
 
  ### row{}
@@ -88,26 +88,26 @@
  - **viewBind**: Function that associates content with visual components (required)
  
  ```kotlin
-   listDSL<String, RedditPost> {
-     recyclerView = this@MainActivity.recyclerView
+ listDSL<String, RedditPost> {
+    recyclerView = this@MainActivity.recyclerView
    
-     for (value in listOfRedditPost) {
-       row {
-         id = key
-         content = value
-         viewType = R.layout.item_reddit_post
-         viewBind { content, itemView ->
-               val title: TextView? =
-                   itemView.findViewById(R.id.textView_title)
-               val author: TextView? =
-                   itemView.findViewById(R.id.textView_author)
-               title?.text = content.title
-               author?.text = content.author
-         }
-       }
-     }
-   }
-   ```
+    for (value in listOfRedditPost) {
+        row {
+            id = key
+            content = value
+            viewType = R.layout.item_reddit_post
+            viewBind { content, itemView ->
+                val title: TextView? =
+                    itemView.findViewById(R.id.textView_title)
+                val author: TextView? =
+                    itemView.findViewById(R.id.textView_author)
+                title?.text = content.title
+                author?.text = content.author
+            }
+        }
+    }
+ }
+ ```
 
  ### observe{}
  
@@ -115,35 +115,35 @@
  using for this the LiveData class that allows us to create an observable data holder.
  
  ```kotlin
-   val redditPostLiveData: MutableLiveData<List<RedditPost>> by lazy {
-         MutableLiveData<List<RedditPost>>()
-   }
-  ```
+ val redditPostLiveData: MutableLiveData<List<RedditPost>> by lazy {
+    MutableLiveData<List<RedditPost>>()
+ }
+ ```
  ```kotlin
-   listDSL<String, RedditPost> {
-     recyclerView = this@MainActivity.recyclerView
+ listDSL<String, RedditPost> {
+    recyclerView = this@MainActivity.recyclerView
      
-     observe(redditPostLiveData) { posts ->
-       posts?.let {
-         for (value in listOfRedditPost) {
-           row {
-             id = key
-             content = value
-             viewType = R.layout.item_reddit_post
-             viewBind { content, itemView ->
-               val title: TextView? =
-                   itemView.findViewById(R.id.textView_title)
-               val author: TextView? =
-                   itemView.findViewById(R.id.textView_author)
-               title?.text = content.title
-               author?.text = content.author
-             }
-           }
-         }           
-       }
-     }
-   }
-   ```
+    observe(redditPostLiveData) { posts ->
+        posts?.let {
+            for (value in listOfRedditPost) {
+                row {
+                    id = key
+                    content = value
+                    viewType = R.layout.item_reddit_post
+                    viewBind { content, itemView ->
+                        val title: TextView? =
+                            itemView.findViewById(R.id.textView_title)
+                        val author: TextView? =
+                            itemView.findViewById(R.id.textView_author)
+                        title?.text = content.title
+                        author?.text = content.author
+                    }
+                }
+            }           
+        }
+    }
+ }
+ ```
 
 ### load{}
   
@@ -152,38 +152,38 @@ The load is a reactive function that is call every time we can not scroll furthe
 - **PREPEND**: Called when reaches the top.
 - **APPEND**: Called when reaches the bottom.
   
-```kotlin
-   listDSL<String, RedditPost> {
-      recyclerView = this@MainActivity.recyclerView
+ ```kotlin
+ listDSL<String, RedditPost> {
+    recyclerView = this@MainActivity.recyclerView
       
-      load {
+    load {
         when(it) {
-          ListState.REFRESH -> print("")
-          ListState.PREPEND -> mainViewModel.getPosts(after = null, before = before)
-          ListState.APPEND -> mainViewModel.getPosts(after = after, before = null)
+            ListState.REFRESH -> print("")
+            ListState.PREPEND -> mainViewModel.getPosts(after = null, before = before)
+            ListState.APPEND -> mainViewModel.getPosts(after = after, before = null)
         }
-      }
-      observe(redditPostLiveData) { posts ->
+    }
+    observe(redditPostLiveData) { posts ->
         posts?.let {
-          for (value in listOfRedditPost) {
-            row {
-              id = key
-              content = value
-              viewType = R.layout.item_reddit_post
-              viewBind { content, itemView ->
-                val title: TextView? =
-                    itemView.findViewById(R.id.textView_title)
-                val author: TextView? =
-                    itemView.findViewById(R.id.textView_author)
-                title?.text = content.title
-                author?.text = content.author
-              }
-            }
-          }           
+            for (value in listOfRedditPost) {
+                row {
+                    id = key
+                    content = value
+                    viewType = R.layout.item_reddit_post
+                    viewBind { content, itemView ->
+                        val title: TextView? =
+                            itemView.findViewById(R.id.textView_title)
+                        val author: TextView? =
+                            itemView.findViewById(R.id.textView_author)
+                        title?.text = content.title
+                        author?.text = content.author
+                    }
+                }
+            }           
         }
-      }
-   }
-  ```
+    }
+ }
+ ```
 
  ## R8 and ProGuard
 
