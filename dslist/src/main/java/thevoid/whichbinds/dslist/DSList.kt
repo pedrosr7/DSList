@@ -23,7 +23,7 @@ class DSList<R,T> {
     private val _listState: MutableStateFlow<ListState> = MutableStateFlow(ListState.APPEND)
     private val listState: StateFlow<ListState> = _listState
 
-    private val adapter: DSListAdapter<R,T> = DSListAdapter()
+    val adapter: DSListAdapter<R,T> = DSListAdapter()
     val rows: ArrayList<Row<R, T>> = arrayListOf()
 
     val after: R?

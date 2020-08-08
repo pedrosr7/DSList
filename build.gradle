@@ -52,8 +52,8 @@ ext {
     testRunnerVersion = "1.2.0"
     espressoCoreVersion = "3.2.0"
 
-    libVersionCode = 1
-    libVersionName = '0.1.1'
+    libVersionCode = 2
+    libVersionName = '0.2.0'
 
     bintrayRepo = 'DSList' // Repo name in bintray dashboard
     bintrayName = 'thevoid.whichbinds.dslist' // package name of the bintray repo
@@ -67,7 +67,7 @@ ext {
     siteUrl = 'https://github.com/pedrosr7/DSList'    // git repo url
     gitUrl = 'https://github.com/pedrosr7/DSList.git' // git repo vcs url
 
-    libraryVersion = '0.1.1'      // library version
+    libraryVersion = '0.2.0'      // library version
 
     developerId = 'pedrosr7'                // This is your bintray username
     developerName = 'Pedro Sánchez Ramírez'              // Developer's name
