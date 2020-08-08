@@ -19,7 +19,7 @@
  <dependency>
  	<groupId>thevoid.whichbinds.dslist</groupId>
  	<artifactId>dslist</artifactId>
- 	<version>0.1.1</version>
+ 	<version>0.2.0</version>
  	<type>pom</type>
  </dependency>
  ```
@@ -30,7 +30,7 @@
 
  ```groovy
  dependencies {
-    implementation 'thevoid.whichbinds.dslist:dslist:0.1.1'
+    implementation 'thevoid.whichbinds.dslist:dslist:0.2.0'
  }
  ```
 
