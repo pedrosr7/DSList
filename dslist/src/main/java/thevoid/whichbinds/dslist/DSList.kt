@@ -24,12 +24,11 @@ class DSList<R,T> {
     private val listState: StateFlow<ListState> = _listState
 
     val adapter: DSListAdapter<R,T> = DSListAdapter()
-    val rows: ArrayList<Row<R, T>> = arrayListOf()
 
     val after: R?
-        get() { return rows.lastOrNull()?.id }
+        get() { return adapter.rows.lastOrNull()?.id }
     val before: R?
-        get() { return rows.firstOrNull()?.id }
+        get() { return adapter.rows.firstOrNull()?.id }
 
     var recyclerView: RecyclerView? = null
         set(value) {
@@ -62,7 +61,6 @@ class DSList<R,T> {
         liveData.observe(this, Observer(body))
 
     fun row(rowBuilderk: RowBuilder<R,T>.() -> Unit) {
-        rows.add(RowBuilder<R,T>().apply(rowBuilderk).build())
         adapter.submitRows(RowBuilder<R,T>().apply(rowBuilderk).build())
         _listState.value = ListState.REFRESH
     }

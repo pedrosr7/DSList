@@ -5,14 +5,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class FlowViewHolder(view: View): RecyclerView.ViewHolder(view)
+class DSListViewHolder(view: View): RecyclerView.ViewHolder(view)
 
-class DSListAdapter<R,T> : RecyclerView.Adapter<FlowViewHolder>() {
+class DSListAdapter<R,T> : RecyclerView.Adapter<DSListViewHolder>() {
 
-    private val rows: MutableList<Row<R,T>> = mutableListOf()
+    val rows: MutableList<Row<R,T>> = mutableListOf()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FlowViewHolder =
-        FlowViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DSListViewHolder =
+        DSListViewHolder(
             LayoutInflater
                 .from(parent.context)
                 .inflate(viewType, parent, false)
@@ -22,7 +22,7 @@ class DSListAdapter<R,T> : RecyclerView.Adapter<FlowViewHolder>() {
 
     override fun getItemCount(): Int = this.rows.size
 
-    override fun onBindViewHolder(holder: FlowViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: DSListViewHolder, position: Int) {
         val row = this.rows[position]
         row.content?.let { row.bindView(it, holder.itemView) }
     }
