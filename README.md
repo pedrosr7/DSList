@@ -42,6 +42,10 @@
  }
  ```
 
+ ## Samples
+ 
+ [RedditDSList]( https://github.com/pedrosr7/RedditDSList) is an example app where we can see different ways to implement a list using the DSList library
+
  ## Quick Start
  
   ```kotlin
@@ -241,6 +245,10 @@
  * Compile SDK: 29+
  * Min SDK: 23+
 
+ ## Creator
+ 
+    Pedro Sánchez Ramírez
+  
  ## License
 
     Copyright (c) 2020, DSList Contributors.
