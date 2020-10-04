@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import arrow.core.extensions.list.foldable.exists
 
 class DSListViewHolder(view: View): RecyclerView.ViewHolder(view)
 
@@ -28,6 +29,8 @@ class DSListAdapter<R,T> : RecyclerView.Adapter<DSListViewHolder>() {
     }
 
     fun submitRows(rows: Row<R,T>){
+        if(this.rows.exists { it.id != null && it.id == rows.id  }) return
+
         this.rows.add(rows)
         notifyDataSetChanged()
     }
