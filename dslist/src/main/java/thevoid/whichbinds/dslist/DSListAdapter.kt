@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import arrow.core.extensions.list.foldable.exists
 
 class DSListViewHolder(view: View): RecyclerView.ViewHolder(view)
 
@@ -24,11 +25,37 @@ class DSListAdapter<R,T> : RecyclerView.Adapter<DSListViewHolder>() {
 
     override fun onBindViewHolder(holder: DSListViewHolder, position: Int) {
         val row = this.rows[position]
-        row.content?.let { row.bindView(it, holder.itemView) }
+
+        row.bindView?.let {
+            it(row.content, holder.itemView)
+        }
     }
 
-    fun submitRows(rows: Row<R,T>){
-        this.rows.add(rows)
-        notifyDataSetChanged()
+    fun submitRow(row: Row<R,T>) {
+        if(this.rows.exists { it.id != null && it.id == row.id }) return
+
+        this.rows.add(row)
+        DSLCache.saveRowToCache("rows", this.rows)
+        notifyItemInserted(this.rows.lastIndex)
     }
+
+    fun submitRows(rows: List<Row<R,T>>) {
+        val nonRepeated = rows.filter { p -> this.rows.none { it.id == p.id } }.toMutableList()
+        if(nonRepeated.isEmpty()) return
+        val last = nonRepeated.lastIndex
+        this.rows.prepend(nonRepeated)
+
+        DSLCache.saveRowToCache("rows", this.rows)
+        notifyItemRangeInserted(0, last)
+    }
+
+    fun retrieveFromCache() {
+        if(rows.isEmpty()){
+            DSLCache.retrieveRowsFromCache("rows")?.let {
+                rows.addAll(it as MutableList<Row<R,T>>)
+            }
+        }
+    }
+
 }
+

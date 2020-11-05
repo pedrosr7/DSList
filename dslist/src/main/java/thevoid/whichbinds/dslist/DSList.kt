@@ -20,8 +20,8 @@ typealias Status = (ListState) -> Unit
 @ExperimentalCoroutinesApi
 class DSList<R,T> {
 
-    private val _listState: MutableStateFlow<ListState> = MutableStateFlow(ListState.APPEND)
-    private val listState: StateFlow<ListState> = _listState
+    val _listState: MutableStateFlow<ListState> = MutableStateFlow(ListState.REFRESH)
+    val listState: StateFlow<ListState> = _listState
 
     val adapter: DSListAdapter<R,T> = DSListAdapter()
 
@@ -34,9 +34,11 @@ class DSList<R,T> {
         set(value) {
             value?.adapter = adapter
             field = value
+            adapter.retrieveFromCache()
             recyclerView?.addOnScrollListener( object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
+
                     if(recyclerView.reachesTopScrolling(newState)) {
                         if(_listState.value != ListState.REFRESH) _listState.value = ListState.REFRESH
                         _listState.value = ListState.PREPEND
@@ -60,8 +62,13 @@ class DSList<R,T> {
     fun <T : Any, L : LiveData<T>> LifecycleOwner.observe(liveData: L, body: (T?) -> Unit) =
         liveData.observe(this, Observer(body))
 
-    fun row(rowBuilderk: RowBuilder<R,T>.() -> Unit) {
-        adapter.submitRows(RowBuilder<R,T>().apply(rowBuilderk).build())
+    fun row(rowBuilder: RowBuilder<R,T>.() -> Unit) {
+        adapter.submitRow(RowBuilder<R,T>().apply(rowBuilder).build())
+        _listState.value = ListState.REFRESH
+    }
+
+    fun ul(aRow: Ul<R,T>.() -> Unit) {
+        adapter.submitRows(Ul<R,T>().apply(aRow))
         _listState.value = ListState.REFRESH
     }
 
