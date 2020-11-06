@@ -4,13 +4,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import arrow.core.extensions.list.foldable.exists
 
 class DSListViewHolder(view: View): RecyclerView.ViewHolder(view)
 
-class DSListAdapter<R,T> : RecyclerView.Adapter<DSListViewHolder>() {
+class DSListAdapter<R,T : Comparable<T>> : RecyclerView.Adapter<DSListViewHolder>() {
 
-    val rows: MutableList<Row<R,T>> = mutableListOf()
+    var rows: MutableList<Row<R,T>> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DSListViewHolder =
         DSListViewHolder(
@@ -31,22 +30,12 @@ class DSListAdapter<R,T> : RecyclerView.Adapter<DSListViewHolder>() {
         }
     }
 
-    fun submitRow(row: Row<R,T>) {
-        if(this.rows.exists { it.id != null && it.id == row.id }) return
+    fun submitRows(rows: MutableList<Row<R,T>>) {
+        val oldList = this.rows
+        this.rows = rows
 
-        this.rows.add(row)
+        notifyChanges(oldList, this.rows)
         DSLCache.saveRowToCache("rows", this.rows)
-        notifyItemInserted(this.rows.lastIndex)
-    }
-
-    fun submitRows(rows: List<Row<R,T>>) {
-        val nonRepeated = rows.filter { p -> this.rows.none { it.id == p.id } }.toMutableList()
-        if(nonRepeated.isEmpty()) return
-        val last = nonRepeated.lastIndex
-        this.rows.prepend(nonRepeated)
-
-        DSLCache.saveRowToCache("rows", this.rows)
-        notifyItemRangeInserted(0, last)
     }
 
     fun retrieveFromCache() {
@@ -56,6 +45,33 @@ class DSListAdapter<R,T> : RecyclerView.Adapter<DSListViewHolder>() {
             }
         }
     }
+
+    fun removeAll() {
+        val last = rows.lastIndex
+        rows.clear()
+        notifyItemRangeRemoved(0, last)
+    }
+
+    fun removeByViewType(target: Int) {
+        val oldList = this.rows
+        rows.removeAll {
+            it.viewType == target
+        }
+
+        notifyChanges(oldList, this.rows)
+    }
+
+    fun configShimmer(number: Int, viewType: Int) {
+        if (rows.isEmpty()) {
+            val row = Row<R, T>(null, null, viewType) { _, _ -> }
+            repeat(number) {
+                rows.add(row)
+            }
+
+            notifyItemRangeInserted(0, rows.lastIndex)
+        }
+    }
+
 
 }
 

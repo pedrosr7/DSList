@@ -18,7 +18,7 @@ enum class ListState {
 typealias Status = (ListState) -> Unit
 
 @ExperimentalCoroutinesApi
-class DSList<R,T> {
+class DSList<R,T : Comparable<T>> {
 
     val _listState: MutableStateFlow<ListState> = MutableStateFlow(ListState.REFRESH)
     val listState: StateFlow<ListState> = _listState
@@ -62,11 +62,6 @@ class DSList<R,T> {
     fun <T : Any, L : LiveData<T>> LifecycleOwner.observe(liveData: L, body: (T?) -> Unit) =
         liveData.observe(this, Observer(body))
 
-    fun row(rowBuilder: RowBuilder<R,T>.() -> Unit) {
-        adapter.submitRow(RowBuilder<R,T>().apply(rowBuilder).build())
-        _listState.value = ListState.REFRESH
-    }
-
     fun ul(aRow: Ul<R,T>.() -> Unit) {
         adapter.submitRows(Ul<R,T>().apply(aRow))
         _listState.value = ListState.REFRESH
@@ -75,4 +70,4 @@ class DSList<R,T> {
 }
 
 @ExperimentalCoroutinesApi
-fun <R,T> listDSL(init: DSList<R,T>.() -> Unit) = DSList<R,T>().apply(init)
+fun <R,T : Comparable<T>> listDSL(init: DSList<R,T>.() -> Unit) = DSList<R,T>().apply(init)

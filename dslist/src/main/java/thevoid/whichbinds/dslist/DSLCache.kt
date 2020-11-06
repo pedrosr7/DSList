@@ -31,4 +31,11 @@ object DSLCache {
         return null
     }
 
+    fun removeCache(key: String) {
+
+        try {
+            lru.remove(key)
+        } catch (e: Exception) { }
+
+    }
 }
