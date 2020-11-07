@@ -61,6 +61,9 @@ class DSList<R,T : Comparable<T>> {
         val initial = InitBuilder().apply(init)
         this.cacheName = initial.cacheName
         this.recyclerView = initial.recyclerView
+        initial.shimmerViewId?.let {
+            adapter.configShimmer(initial.shimmersToAdd, it)
+        }
     }
 
     fun load(fn: Status) = scope.launch {

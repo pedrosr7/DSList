@@ -4,11 +4,15 @@ import androidx.recyclerview.widget.RecyclerView
 
 data class Init (
     val recyclerView: RecyclerView?,
-    val cacheName: String?
+    val cacheName: String?,
+    val shimmerViewId: Int?,
+    val shimmersToAdd: Int
 )
 class InitBuilder {
     var recyclerView: RecyclerView? = null
     var cacheName: String? = null
+    val shimmerViewId: Int? = null
+    val shimmersToAdd: Int = 3
 
-    fun build(): Init = Init(recyclerView, cacheName)
+    fun build(): Init = Init(recyclerView, cacheName, shimmerViewId, shimmersToAdd)
 }

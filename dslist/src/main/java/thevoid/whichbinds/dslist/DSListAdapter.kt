@@ -72,7 +72,7 @@ class DSListAdapter<R,T : Comparable<T>> : RecyclerView.Adapter<DSListViewHolder
 
     fun configShimmer(number: Int, viewType: Int) {
         if (rows.isEmpty()) {
-            val row = Row<R, T>(null, null, viewType) { _, _ -> }
+            val row = Row<R, T>(null, null, viewType, null)
             repeat(number) {
                 rows.add(row)
             }
