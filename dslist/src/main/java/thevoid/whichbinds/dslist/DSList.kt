@@ -20,6 +20,9 @@ typealias Status = (ListState) -> Unit
 @ExperimentalCoroutinesApi
 class DSList<R,T : Comparable<T>> {
 
+    private val job = Job()
+    private val scope = CoroutineScope(Dispatchers.Main + job)
+
     val _listState: MutableStateFlow<ListState> = MutableStateFlow(ListState.REFRESH)
     val listState: StateFlow<ListState> = _listState
 
@@ -30,10 +33,13 @@ class DSList<R,T : Comparable<T>> {
     val before: R?
         get() { return adapter.rows.firstOrNull()?.id }
 
-    var recyclerView: RecyclerView? = null
+    private var cacheName: String? = null
+
+    private var recyclerView: RecyclerView? = null
         set(value) {
             value?.adapter = adapter
             field = value
+            adapter.cacheName = cacheName
             adapter.retrieveFromCache()
             recyclerView?.addOnScrollListener( object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -51,9 +57,11 @@ class DSList<R,T : Comparable<T>> {
             })
         }
 
-
-    private val job = Job()
-    private val scope = CoroutineScope(Dispatchers.Main + job)
+    fun init(init: InitBuilder.() -> Unit) {
+        val initial = InitBuilder().apply(init)
+        this.cacheName = initial.cacheName
+        this.recyclerView = initial.recyclerView
+    }
 
     fun load(fn: Status) = scope.launch {
         listState.collect { fn(it) }
@@ -62,8 +70,8 @@ class DSList<R,T : Comparable<T>> {
     fun <T : Any, L : LiveData<T>> LifecycleOwner.observe(liveData: L, body: (T?) -> Unit) =
         liveData.observe(this, Observer(body))
 
-    fun ul(aRow: Ul<R,T>.() -> Unit) {
-        adapter.submitRows(Ul<R,T>().apply(aRow))
+    fun ul(uL: Ul<R,T>.() -> Unit) {
+        adapter.submitRows(Ul<R,T>().apply(uL))
         _listState.value = ListState.REFRESH
     }
 

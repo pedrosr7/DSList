@@ -10,6 +10,7 @@ class DSListViewHolder(view: View): RecyclerView.ViewHolder(view)
 class DSListAdapter<R,T : Comparable<T>> : RecyclerView.Adapter<DSListViewHolder>() {
 
     var rows: MutableList<Row<R,T>> = mutableListOf()
+    var cacheName: String? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DSListViewHolder =
         DSListViewHolder(
@@ -35,13 +36,21 @@ class DSListAdapter<R,T : Comparable<T>> : RecyclerView.Adapter<DSListViewHolder
         this.rows = rows
 
         notifyChanges(oldList, this.rows)
-        DSLCache.saveRowToCache("rows", this.rows)
+        saveToCache()
+    }
+
+    fun saveToCache() {
+        cacheName?.let {
+            DSLcache.saveRowToCache(it, this.rows)
+        }
     }
 
     fun retrieveFromCache() {
         if(rows.isEmpty()){
-            DSLCache.retrieveRowsFromCache("rows")?.let {
-                rows.addAll(it as MutableList<Row<R,T>>)
+            cacheName?.let { name ->
+                DSLcache.retrieveRowsFromCache(name)?.let {
+                    rows.addAll(it as MutableList<Row<R,T>>)
+                }
             }
         }
     }
