@@ -11,8 +11,8 @@ data class Init (
 class InitBuilder {
     var recyclerView: RecyclerView? = null
     var cacheName: String? = null
-    val shimmerViewId: Int? = null
-    val shimmersToAdd: Int = 3
+    var shimmerViewId: Int? = null
+    var shimmersToAdd: Int = 3
 
     fun build(): Init = Init(recyclerView, cacheName, shimmerViewId, shimmersToAdd)
 }
