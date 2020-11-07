@@ -39,8 +39,6 @@ class DSList<R,T : Comparable<T>> {
         set(value) {
             value?.adapter = adapter
             field = value
-            adapter.cacheName = cacheName
-            adapter.retrieveFromCache()
             recyclerView?.addOnScrollListener( object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
@@ -61,9 +59,11 @@ class DSList<R,T : Comparable<T>> {
         val initial = InitBuilder().apply(init)
         this.cacheName = initial.cacheName
         this.recyclerView = initial.recyclerView
-        initial.shimmerViewId?.let {
-            adapter.configShimmer(initial.shimmersToAdd, it)
-        }
+        this.adapter.cacheName = cacheName
+        this.adapter.shimmerViewId = initial.shimmerViewId
+        this.adapter.shimmersToAdd = initial.shimmersToAdd
+        adapter.retrieveFromCache()
+        adapter.addShimmers()
     }
 
     fun load(fn: Status) = scope.launch {

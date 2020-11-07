@@ -11,6 +11,8 @@ class DSListAdapter<R,T : Comparable<T>> : RecyclerView.Adapter<DSListViewHolder
 
     var rows: MutableList<Row<R,T>> = mutableListOf()
     var cacheName: String? = null
+    var shimmerViewId: Int? = null
+    var shimmersToAdd: Int = 3
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DSListViewHolder =
         DSListViewHolder(
@@ -36,12 +38,18 @@ class DSListAdapter<R,T : Comparable<T>> : RecyclerView.Adapter<DSListViewHolder
         this.rows = rows
 
         notifyChanges(oldList, this.rows)
+        removeShimmers()
         saveToCache()
     }
 
     fun saveToCache() {
-        cacheName?.let {
-            DSLcache.saveRowToCache(it, this.rows)
+        cacheName?.let { cache ->
+            shimmerViewId?.let { target ->
+                val withOutShimmer = this.rows.filterNot {
+                    it.viewType == target
+                }
+                DSLcache.saveRowToCache(cache, withOutShimmer)
+            }
         }
     }
 
@@ -61,26 +69,28 @@ class DSListAdapter<R,T : Comparable<T>> : RecyclerView.Adapter<DSListViewHolder
         notifyItemRangeRemoved(0, last)
     }
 
-    fun removeByViewType(target: Int) {
-        val oldList = this.rows
-        rows.removeAll {
-            it.viewType == target
-        }
-
-        notifyChanges(oldList, this.rows)
-    }
-
-    fun configShimmer(number: Int, viewType: Int) {
-        if (rows.isEmpty()) {
-            val row = Row<R, T>(null, null, viewType, null)
-            repeat(number) {
-                rows.add(row)
+    fun removeShimmers() {
+        shimmerViewId?.let { target ->
+            val oldList = this.rows
+            rows.removeAll {
+                it.viewType == target
             }
-
-            notifyItemRangeInserted(0, rows.lastIndex)
+            notifyChanges(oldList, this.rows)
         }
     }
 
+    fun addShimmers() {
+        shimmerViewId?.let { viewType ->
+            val oldList = this.rows
+            if (rows.isEmpty()) {
+                val row = Row<R, T>(null, null, viewType, null)
+                repeat(shimmersToAdd) {
+                    rows.add(row)
+                }
+                notifyChanges(oldList, this.rows)
+            }
+        }
+    }
 
 }
 
