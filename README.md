@@ -19,7 +19,7 @@
  <dependency>
  	<groupId>thevoid.whichbinds.dslist</groupId>
  	<artifactId>dslist</artifactId>
- 	<version>0.2.0</version>
+ 	<version>0.4.0</version>
  	<type>pom</type>
  </dependency>
  ```
@@ -49,37 +49,39 @@
  ## Quick Start
  
   ```kotlin
-  listDSL<String, RedditPost> {
-     recyclerView = this@MainActivity.recyclerView
+listDSL<String, RedditPost> {
+    recyclerView = this@MainActivity.recyclerView
       
-     load {
-         when(it) {
-             ListState.REFRESH -> print("")
-             ListState.PREPEND -> mainViewModel.getPosts(after = null, before = before)
-             ListState.APPEND -> mainViewModel.getPosts(after = after, before = null)
-         }
-     }
+    load {
+        when(it) {
+            ListState.REFRESH -> print("")
+            ListState.PREPEND -> mainViewModel.getPosts(after = null, before = before)
+            ListState.APPEND -> mainViewModel.getPosts(after = after, before = null)
+        }
+    }
 
-     observe(redditPostLiveData) { posts ->
-         posts?.let {
-             for (value in listOfRedditPost) {
-                 row {
-                     id = key
-                     content = value
-                     viewType = R.layout.item_reddit_post
-                     viewBind { content, itemView ->
-                         val title: TextView? =
-                             itemView.findViewById(R.id.textView_title)
-                         val author: TextView? =
-                             itemView.findViewById(R.id.textView_author)
-                         title?.text = content.title
-                         author?.text = content.author
-                     }
-                 }
-             }           
-         }
-     }
-  }
+    observe(redditPostLiveData) { posts ->
+        posts?.let {
+            ul {
+               for (value in listOfRedditPost) {
+                li {
+                    id = key
+                    content = value
+                    viewType = R.layout.item_reddit_post
+                    viewBind { content, itemView ->
+                        val title: TextView? =
+                            itemView.findViewById(R.id.textView_title)
+                        val author: TextView? =
+                            itemView.findViewById(R.id.textView_author)
+                        title?.text = content.title
+                        author?.text = content.author
+                        }
+                    }
+                }          
+            }   
+        }
+    }
+}
  ```
  
  ## Documentation
@@ -89,7 +91,8 @@
  ### properties
  
   - **recyclerView**: Instance of RecyclerView class.
-  - **rows**: List of Row type.
+  - **ul**: List of Ul type.
+  - **li**: List item of Row type.
   - **after**: Last id of the row list.
   - **before**: First id of the row list.
 
@@ -127,23 +130,27 @@
  ```kotlin
  recyclerView.layoutManager = LinearLayoutManager(this) // or GridLayoutManager(this,2)
  ```
-
- ### row{}
+ ### ul{}
  
- The row function allows you to add the content of the list and associate it with the visual components that have been defined.
+ The ul function is a lambda with reciver that allows you to add `li` items to the list.
+
+ ### li{}
+ 
+ The li function allows you to add the content of the list and associate it with the visual components that have been defined.
  You have four properties `id`, `content`, `viewType` and `viewBind`.
  
  - **id**: Row identifier (optional)
  - **content**: Row content (optional)
  - **viewType**: Id of the view already designed for the items (required)
- - **viewBind**: Function that associates content with visual components (required)
+ - **viewBind**: Function that associates content with visual components (optional)
  
  ```kotlin
  listDSL<String, RedditPost> {
     recyclerView = this@MainActivity.recyclerView
    
-    for (value in listOfRedditPost) {
-        row {
+    ul {
+        for (value in listOfRedditPost) {
+        li {
             id = key
             content = value
             viewType = R.layout.item_reddit_post
@@ -154,6 +161,7 @@
                     itemView.findViewById(R.id.textView_author)
                 title?.text = content.title
                 author?.text = content.author
+                }
             }
         }
     }
@@ -176,8 +184,9 @@
      
     observe(redditPostLiveData) { posts ->
         posts?.let {
-            for (value in listOfRedditPost) {
-                row {
+            ul {
+                for (value in listOfRedditPost) {
+                li {
                     id = key
                     content = value
                     viewType = R.layout.item_reddit_post
@@ -190,7 +199,8 @@
                         author?.text = content.author
                     }
                 }
-            }           
+            }        
+            }   
         }
     }
  }
@@ -216,8 +226,9 @@
 
     observe(redditPostLiveData) { posts ->
         posts?.let {
-            for (value in listOfRedditPost) {
-                row {
+            ul {
+                for (value in listOfRedditPost) {
+                li {
                     id = key
                     content = value
                     viewType = R.layout.item_reddit_post
@@ -228,9 +239,11 @@
                             itemView.findViewById(R.id.textView_author)
                         title?.text = content.title
                         author?.text = content.author
+                        }
                     }
-                }
-            }           
+                }            
+            }
+           
         }
     }
  }
@@ -245,7 +258,7 @@
  * Compile SDK: 29+
  * Min SDK: 23+
 
- ## Creator
+ ## Author
  
     Pedro Sánchez Ramírez
   
