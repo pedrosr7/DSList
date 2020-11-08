@@ -9,13 +9,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 
-enum class ListState {
+enum class States {
     REFRESH,
     PREPEND,
     APPEND
 }
 
-typealias Status = (ListState) -> Unit
+typealias Status = (States) -> Unit
 
 @ExperimentalCoroutinesApi
 class DSList<R,T : Comparable<T>> {
@@ -23,10 +23,10 @@ class DSList<R,T : Comparable<T>> {
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.Main + job)
 
-    val _listState: MutableStateFlow<ListState> = MutableStateFlow(ListState.REFRESH)
-    val listState: StateFlow<ListState> = _listState
+    private val _states: MutableStateFlow<States> = MutableStateFlow(States.REFRESH)
+    private val states: StateFlow<States> = _states
 
-    val adapter: DSListAdapter<R,T> = DSListAdapter()
+    private val adapter: DSListAdapter<R,T> = DSListAdapter()
 
     val after: R?
         get() { return adapter.rows.lastOrNull()?.id }
@@ -44,12 +44,12 @@ class DSList<R,T : Comparable<T>> {
                     super.onScrollStateChanged(recyclerView, newState)
 
                     if(recyclerView.reachesTopScrolling(newState)) {
-                        if(_listState.value != ListState.REFRESH) _listState.value = ListState.REFRESH
-                        _listState.value = ListState.PREPEND
+                        if(_states.value != States.REFRESH) _states.value = States.REFRESH
+                        _states.value = States.PREPEND
                     }
                     if(recyclerView.reachesBottomScrolling(newState)) {
-                        if(_listState.value != ListState.REFRESH) _listState.value = ListState.REFRESH
-                        _listState.value = ListState.APPEND
+                        if(_states.value != States.REFRESH) _states.value = States.REFRESH
+                        _states.value = States.APPEND
                     }
                 }
             })
@@ -67,7 +67,7 @@ class DSList<R,T : Comparable<T>> {
     }
 
     fun load(fn: Status) = scope.launch {
-        listState.collect { fn(it) }
+        states.collect { fn(it) }
     }
 
     fun <T : Any, L : LiveData<T>> LifecycleOwner.observe(liveData: L, body: (T?) -> Unit) =
@@ -75,7 +75,15 @@ class DSList<R,T : Comparable<T>> {
 
     fun ul(uL: Ul<R,T>.() -> Unit) {
         adapter.submitRows(Ul<R,T>().apply(uL))
-        _listState.value = ListState.REFRESH
+        _states.value = States.REFRESH
+    }
+
+    fun manualStateChange(newState: States) {
+        _states.value = newState
+    }
+
+    fun removeCache() {
+        adapter.removeCache()
     }
 
 }

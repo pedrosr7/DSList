@@ -47,6 +47,7 @@ class DSListAdapter<R,T : Comparable<T>> : RecyclerView.Adapter<DSListViewHolder
                 val withOutShimmer = this.rows.filterNot {
                     it.viewType == target
                 }
+
                 DSLcache.saveRowToCache(cache, withOutShimmer)
             }
         }
@@ -59,6 +60,12 @@ class DSListAdapter<R,T : Comparable<T>> : RecyclerView.Adapter<DSListViewHolder
                     rows.addAll(it as MutableList<Row<R,T>>)
                 }
             }
+        }
+    }
+
+    fun removeCache() {
+        cacheName?.let { name ->
+            DSLcache.removeCache(name)
         }
     }
 
