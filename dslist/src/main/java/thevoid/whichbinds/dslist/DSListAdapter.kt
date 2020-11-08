@@ -34,11 +34,10 @@ class DSListAdapter<R,T : Comparable<T>> : RecyclerView.Adapter<DSListViewHolder
     }
 
     fun submitRows(rows: MutableList<Row<R,T>>) {
-        val oldList = this.rows
+        val oldList = this.rows.toMutableList()
         this.rows = rows
 
         notifyChanges(oldList, this.rows)
-        removeShimmers()
         saveToCache()
     }
 
@@ -69,19 +68,9 @@ class DSListAdapter<R,T : Comparable<T>> : RecyclerView.Adapter<DSListViewHolder
         notifyItemRangeRemoved(0, last)
     }
 
-    fun removeShimmers() {
-        shimmerViewId?.let { target ->
-            val oldList = this.rows
-            rows.removeAll {
-                it.viewType == target
-            }
-            notifyChanges(oldList, this.rows)
-        }
-    }
-
     fun addShimmers() {
         shimmerViewId?.let { viewType ->
-            val oldList = this.rows
+            val oldList = this.rows.toMutableList()
             if (rows.isEmpty()) {
                 val row = Row<R, T>(null, null, viewType, null)
                 repeat(shimmersToAdd) {

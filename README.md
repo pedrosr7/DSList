@@ -19,7 +19,7 @@
  <dependency>
  	<groupId>thevoid.whichbinds.dslist</groupId>
  	<artifactId>dslist</artifactId>
- 	<version>0.4.4</version>
+ 	<version>0.4.5</version>
  	<type>pom</type>
  </dependency>
  ```
