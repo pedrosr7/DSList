@@ -18,14 +18,13 @@ enum class States {
 typealias Status = (States) -> Unit
 
 @ExperimentalCoroutinesApi
-class DSList<R,T : Comparable<T>>
-    : DSLSelection<R,T> {
+class DSList<R,T : Comparable<T>> {
 
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.Main + job)
     private val _states: MutableStateFlow<States> = MutableStateFlow(States.REFRESH)
     private val states: StateFlow<States> = _states
-    private val adapter: DSListAdapter<R,T> = DSListAdapter()
+    val adapter: DSListAdapter<R,T> = DSListAdapter()
     private var recyclerView: RecyclerView? = null
         set(value) {
             value?.adapter = adapter
@@ -76,7 +75,7 @@ class DSList<R,T : Comparable<T>>
         _states.value = newState
     }
 
-    private fun addShimmers(shimmerViewId: Int, shimmersToAdd: Int = 3){
+    private fun addShimmers(shimmerViewId: Int, shimmersToAdd: Int = 3) {
         if(adapter.rows.isEmpty()) {
             val rows: MutableList<Row<R,T>> = mutableListOf()
             val row = Row<R, T>(null, null, shimmerViewId, null)
@@ -87,38 +86,13 @@ class DSList<R,T : Comparable<T>>
         }
     }
 
-    override fun onLongTap(index: Int) {
-        adapter.onLongTap(index)
-    }
-
-    override fun onTap(index: Int) {
-        adapter.onTap(index)
-    }
-
-    override fun cleanSelectedIds() {
-        adapter.cleanSelectedIds()
-    }
-
-    override fun deleteSelectedIds(): MutableList<T>? =
-        adapter.deleteSelectedIds()
-
-    override fun addIdIntoSelectedIds(index: Int) {
-        addIdIntoSelectedIds(index)
-    }
-
-    override fun findSelected(id: R?): Boolean =
-        adapter.findSelected(id)
-
-    override fun selectAllIds() {
-        adapter.selectAllIds()
-    }
-
-    override fun getSelectIds(): MutableList<R?> =
-        adapter.getSelectIds()
-
     fun getRows(): MutableList<Row<R,T>> = adapter.rows
 
     fun getContent(): List<T> = adapter.getContents()
+
+    fun getItemByPosition(position: Int): T? =
+        adapter.getItemByPosition(position)
+
 }
 
 @ExperimentalCoroutinesApi

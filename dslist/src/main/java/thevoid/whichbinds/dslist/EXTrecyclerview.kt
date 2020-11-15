@@ -17,3 +17,8 @@ fun <R,T : Comparable<T>> RecyclerView.Adapter<*>.notifyChanges(oldList: Mutable
     diff.dispatchUpdatesTo(this)
 }
 
+fun RecyclerView.reachesTopScrolling(newState: Int) : Boolean =
+    RecyclerView.SCROLL_STATE_IDLE == newState && !canScrollVertically(-1)
+
+fun RecyclerView.reachesBottomScrolling(newState: Int): Boolean =
+    RecyclerView.SCROLL_STATE_IDLE == newState && !canScrollVertically(1)
