@@ -7,12 +7,17 @@ import androidx.recyclerview.widget.RecyclerView
 
 class DSListViewHolder(view: View): RecyclerView.ViewHolder(view)
 
-class DSListAdapter<R,T : Comparable<T>> : RecyclerView.Adapter<DSListViewHolder>() {
+class DSListAdapter<R,T : Comparable<T>>
+    : RecyclerView.Adapter<DSListViewHolder>() {
 
     var rows: MutableList<Row<R,T>> = mutableListOf()
-    var cacheName: String? = null
-    var shimmerViewId: Int? = null
-    var shimmersToAdd: Int = 3
+    var selectedIds: MutableList<R?> = ArrayList()
+
+    var isMultiSelectOn: Boolean = false
+        set(value) {
+            notifyItemRangeChanged(0, rows.lastIndex, true)
+            field = value
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DSListViewHolder =
         DSListViewHolder(
@@ -25,11 +30,13 @@ class DSListAdapter<R,T : Comparable<T>> : RecyclerView.Adapter<DSListViewHolder
 
     override fun getItemCount(): Int = this.rows.size
 
+    override fun getItemId(position: Int): Long = position.toLong()
+
     override fun onBindViewHolder(holder: DSListViewHolder, position: Int) {
         val row = this.rows[position]
 
         row.bindView?.let {
-            it(row.content, holder.itemView)
+            it(row.id, row.content, holder.itemView, position)
         }
     }
 
@@ -38,55 +45,19 @@ class DSListAdapter<R,T : Comparable<T>> : RecyclerView.Adapter<DSListViewHolder
         this.rows = rows
 
         notifyChanges(oldList, this.rows)
-        saveToCache()
-    }
-
-    fun saveToCache() {
-        cacheName?.let { cache ->
-            shimmerViewId?.let { target ->
-                val withOutShimmer = this.rows.filterNot {
-                    it.viewType == target
-                }
-
-                DSLcache.saveRowToCache(cache, withOutShimmer)
-            }
-        }
-    }
-
-    fun retrieveFromCache() {
-        if(rows.isEmpty()){
-            cacheName?.let { name ->
-                DSLcache.retrieveRowsFromCache(name)?.let {
-                    rows.addAll(it as MutableList<Row<R,T>>)
-                }
-            }
-        }
-    }
-
-    fun removeCache() {
-        cacheName?.let { name ->
-            DSLcache.removeCache(name)
-        }
     }
 
     fun removeAll() {
-        val last = rows.lastIndex
+        val oldList = this.rows.toMutableList()
         rows.clear()
-        notifyItemRangeRemoved(0, last)
+        notifyChanges(oldList, this.rows)
     }
 
-    fun addShimmers() {
-        shimmerViewId?.let { viewType ->
-            val oldList = this.rows.toMutableList()
-            if (rows.isEmpty()) {
-                val row = Row<R, T>(null, null, viewType, null)
-                repeat(shimmersToAdd) {
-                    rows.add(row)
-                }
-                notifyChanges(oldList, this.rows)
-            }
-        }
-    }
+    fun getContents(): List<T> =
+        rows.mapNotNull { it.content }
+
+    fun getItemByPosition(position: Int): T? =
+        rows[position].content
 
 }
 

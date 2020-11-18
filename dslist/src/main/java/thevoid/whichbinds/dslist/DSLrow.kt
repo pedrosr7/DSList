@@ -2,13 +2,13 @@ package thevoid.whichbinds.dslist
 
 import android.view.View
 
-typealias BindView<T> = (T, view: View) -> Unit
+typealias BindView<R, T> = (R, T, view: View, position: Int) -> Unit
 
-data class Row<out R, T : Comparable<T>> (
+data class Row<R, T : Comparable<T>> (
     val id: R?,
     val content: T?,
     val viewType: Int,
-    val bindView: BindView<T?>?
+    val bindView: BindView<R?, T?>?
 ): Comparable<T?> {
     override fun compareTo(other: T?): Int {
         return if(content == null && other == null) 0
@@ -16,16 +16,15 @@ data class Row<out R, T : Comparable<T>> (
         else if(content == null && other != null) -1
         else content!!.compareTo(other!!)
     }
-
-
 }
+
 class RowBuilder<R,T : Comparable<T>> {
     var id: R? = null
     var content: T? = null
     var viewType: Int = 0
-    var bindView: BindView<T?>? = null
+    var bindView: BindView<R?,T?>? = null
 
-    fun viewBind(fn: BindView<T?>) {
+    fun viewBind(fn: BindView<R?, T?>) {
         bindView = fn
     }
 
