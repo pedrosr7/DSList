@@ -86,12 +86,8 @@ class DSList<R,T : Comparable<T>> {
         }
     }
 
-    fun getRows(): MutableList<Row<R,T>> = adapter.rows
 
     fun getContent(): List<T> = adapter.getContents()
-
-    fun getItemByPosition(position: Int): T? =
-        adapter.getItemByPosition(position)
 
 }
 

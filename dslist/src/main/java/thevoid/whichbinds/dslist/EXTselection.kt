@@ -1,7 +1,5 @@
 package thevoid.whichbinds.dslist
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-
 fun <R,T : Comparable<T>> DSListAdapter<R,T>.onLongTapSelection(index: Int) {
     if (!isMultiSelectOn) {
         isMultiSelectOn = true
